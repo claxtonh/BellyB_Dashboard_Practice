@@ -4,9 +4,21 @@ function buildMetadata(sample) {
 
   // Use `d3.json` to fetch the metadata for a sample
     // Use d3 to select the panel with id of `#sample-metadata`
+    var samplem = d3.select("#sample-metadata");
+    console.log("clear");
 
     // Use `.html("") to clear any existing metadata
-
+      //samplem.html("");
+     
+      d3.json(`/metadata/${sample}`).then((metaNames) => {
+        d3.entries(metaNames).forEach((component) => {
+          samplem
+            .append("panel-body")
+            .text(d3.key);
+            console.log("clear2");
+            })});
+          
+      
     // Use `Object.entries` to add each key and value pair to the panel
     // Hint: Inside the loop, you will need to use d3 to append new
     // tags for each key-value in the metadata.
