@@ -8,14 +8,15 @@ function buildMetadata(sample) {
     console.log("clear");
 
     // Use `.html("") to clear any existing metadata
-      //samplem.html("");
+      samplem.html("");
      
       d3.json(`/metadata/${sample}`).then((metaNames) => {
         d3.entries(metaNames).forEach((component) => {
           samplem
+            .enter()
             .append("panel-body")
-            .text(d3.key);
-            console.log("clear2");
+            .text(component.key);
+            console.log(component.key);
             })});
           
       
@@ -30,10 +31,78 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
+    var plotdata = d3.json(`/samples/${sample}`)
+      //obj = JSON.parse(plotdata);
+      //console.log(obj);
+      //console.log(plotdata["sample_values"]);
 
-    // @TODO: Build a Bubble Chart using the sample data
+    
+    console.log(`draw plot for sample ${sample}`);
+    console.log(plotdata);
+    
+    // sort descending  via sample_values
+    console.log(plotdata["sample_values"]);
+    console.log(plotdata.sample_values);
+    //var desc = plotdata.d3.values.sort((first, second) => first - second);
+    
+      //var numbers2 = [{x: 'a', y: 3}, {x: 'c', y: -120}, {x: 'b', y: 2}];
+      //numbers2.sort((first, second ) => first.y - second.y);
+      //console.log(numbers2);
+    
+    
+      // var list = {"you": 100, "me": 75, "foo": 116, "bar": 15};
+      //keysSorted = Object.keys(plotdata).sort(function(a,b){return list[a]-list[b]}).map(key => list[key]);
+      //console.log(keysSorted);
+    
+    
+      //plotdata.sort((first, second ) => first.sample_values - second.sample_values);
+    
+      //plotdata.sort(function(a, b) {return a.value - b.value; });
+    
+      //let entries = Object.entries(plotdata);
+      //let sorted = entries.sort((a, b) => a[1] - b[1]);
+
+      //var slice1 = plotdata.key("samples_values");
+      //console.log(slice1);
+
 
     // @TODO: Build a Pie Chart
+    var trace1 = {
+      labels: ['red', 'blue'],
+      values: [44, 56],
+      type: 'pie'
+    };
+
+    var data = [trace1];
+
+    var layout = {
+      title: "pie chart"
+    };
+    Plotly.plot("pie", data, layout);
+    
+    // @TODO: Build a Bubble Chart using the sample data
+
+    var trace2 = {
+      x: [1, 2, 3, 4],
+      y: [10, 11, 12, 13],
+      mode: 'markers',
+      marker: {
+        size: [40, 60, 80, 100]
+      }
+    };
+
+    var layout2 = {
+      title: 'Buble Chart',
+      showlegend: false
+      
+    };
+  
+  
+  var data2 = [trace2];
+  Plotly.plot("bubble", data2, layout2);
+
+    
+
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
 }
