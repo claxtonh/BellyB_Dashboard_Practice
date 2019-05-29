@@ -5,7 +5,6 @@ function buildMetadata(sample) {
   // Use `d3.json` to fetch the metadata for a sample
     // Use d3 to select the panel with id of `#sample-metadata`
     var samplem = d3.select("#sample-metadata");
-    console.log("clear");
 
     // Use `.html("") to clear any existing metadata
       samplem.html("");
@@ -15,7 +14,6 @@ function buildMetadata(sample) {
           samplem
             .append("p")
             .text(`${component.key} : ${component.value}`);
-            console.log(component.key);
             })});
           
       
@@ -30,18 +28,26 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
-    var plotdata = d3.json(`/samples/${sample}`)
-      //obj = JSON.parse(plotdata);
-      //console.log(obj);
-      //console.log(plotdata["sample_values"]);
+    d3.json(`/samples/${sample}`).then((pd) => {
+   
 
     
     console.log(`draw plot for sample ${sample}`);
-    console.log(plotdata);
+    console.log(pd);
     
-    // sort descending  via sample_values
-    console.log(plotdata["sample_values"]);
-    console.log(plotdata.sample_values);
+    // sort descending  via sample_values -- but the other arrays aren't sorted along with it.
+    pd.sample_values.sort((first, second) => second - first);
+
+    //  slicing the data
+    var topSV = pd.sample_values.slice(0,9);
+    var topID = pd.otu_ids.slice(0,9);
+    var topLabel = pd.otu_labels.slice(0,9);
+
+    console.log(topSV);
+    console.log(topID); 
+    console.log(topLabel);
+    console.log(pd);
+    
     //var desc = plotdata.d3.values.sort((first, second) => first - second);
     
       //var numbers2 = [{x: 'a', y: 3}, {x: 'c', y: -120}, {x: 'b', y: 2}];
@@ -67,8 +73,10 @@ function buildCharts(sample) {
 
     // @TODO: Build a Pie Chart
     var trace1 = {
-      labels: ['red', 'blue'],
-      values: [44, 56],
+      labels: topID,
+      values: topSV,
+      text: topLabel,
+      hoverinfo: 'all',
       type: 'pie'
     };
 
@@ -82,16 +90,18 @@ function buildCharts(sample) {
     // @TODO: Build a Bubble Chart using the sample data
 
     var trace2 = {
-      x: [1, 2, 3, 4],
-      y: [10, 11, 12, 13],
+      x: topID,
+      y: topSV,
+      text: topLabel,
       mode: 'markers',
       marker: {
-        size: [40, 60, 80, 100]
+        size: topSV,
+        color: topID,
       }
     };
 
     var layout2 = {
-      title: 'Buble Chart',
+      title: 'Bubble Chart',
       showlegend: false
       
     };
@@ -101,7 +111,7 @@ function buildCharts(sample) {
   Plotly.plot("bubble", data2, layout2);
 
     
-
+});
     // HINT: You will need to use slice() to grab the top 10 sample_values,
     // otu_ids, and labels (10 each).
 }
