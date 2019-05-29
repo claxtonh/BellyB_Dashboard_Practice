@@ -13,9 +13,8 @@ function buildMetadata(sample) {
       d3.json(`/metadata/${sample}`).then((metaNames) => {
         d3.entries(metaNames).forEach((component) => {
           samplem
-            .enter()
-            .append("panel-body")
-            .text(component.key);
+            .append("p")
+            .text(`${component.key} : ${component.value}`);
             console.log(component.key);
             })});
           
